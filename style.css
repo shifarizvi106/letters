@@ -1,4 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Letter</title>
+<style>
+/* ===== RESET & BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+}
+
+body {
+  background-color: darkred;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== ROOT VARIABLES ===== */
 :root {
   --envelope-x: 300px;
   --envelope-y: 200px;
@@ -9,7 +35,7 @@
   --letter-bg: AntiqueWhite;
   --letter-shadow: BurlyWood;
   --letter-text: #180d07;
-  --letter-font: Times New Roman;
+  --letter-font: 'Times New Roman', Times, serif;
   --letter-button-text: darkred;
   --heart-bg: darkred;
   --heart-text: white;
@@ -23,13 +49,8 @@
     --letter-y: calc(400px - 1rem - 10px);
   }
 }
-html {
-  font-size: 20px;
-}
-body {
-  background-color: darkred;
-}
 
+/* ===== CONTAINER ===== */
 .cssletter {
   position: relative;
   width: 100%;
@@ -39,15 +60,17 @@ body {
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
-  margin: 24dvh 0;
+  padding: 20px;
 }
 
+/* ===== ENVELOPE ===== */
 .envelope {
   position: relative;
   width: var(--envelope-x);
   height: var(--envelope-y);
   background: var(--envelope-bg);
   box-shadow: inset 0 0 30px -5px var(--envelope-shadow), 0 0 50vw 0 #540000;
+  cursor: pointer;
 }
 
 .envelope::before {
@@ -59,8 +82,10 @@ body {
   top: 30%;
   transform: translate(-50%, -50%);
   mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
+/* ===== ENVELOPE FLAP ===== */
 .envelope-flap {
   width: 100%;
   height: 71%;
@@ -83,6 +108,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
 }
 
 .envelope-flap::before,
@@ -103,7 +129,6 @@ body {
 .envelope-flap::before {
   border-radius: 5rem;
   bottom: 30px;
-  border-radius: 5rem;
   top: auto;
 }
 
@@ -128,6 +153,7 @@ body {
   border-radius: 5rem;
 }
 
+/* ===== HEART BUTTON ===== */
 .heart {
   z-index: 4;
   position: relative;
@@ -135,17 +161,15 @@ body {
   border: none;
   width: 70px;
   aspect-ratio: 1;
-  background: radial-gradient(circle at 60% 65%, var(--heart-bg) 64%, #0000 65%)
-      top left/50% 50%,
-    radial-gradient(circle at 40% 65%, var(--heart-bg) 64%, #0000 65%) top
-      right/50% 50%,
-    conic-gradient(from -45deg at 50% 85.5%, var(--heart-bg) 90deg, #0000 0)
-      bottom/100% 50%;
+  background: radial-gradient(circle at 60% 65%, var(--heart-bg) 64%, #0000 65%) top left/50% 50%,
+    radial-gradient(circle at 40% 65%, var(--heart-bg) 64%, #0000 65%) top right/50% 50%,
+    conic-gradient(from -45deg at 50% 85.5%, var(--heart-bg) 90deg, #0000 0) bottom/100% 50%;
   background-repeat: no-repeat;
   left: 50%;
   top: 70%;
   transform: translate(-50%, -50%);
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 @media (min-width: 650px) {
@@ -160,12 +184,9 @@ body {
   position: absolute;
   width: 70px;
   aspect-ratio: 1;
-  background: radial-gradient(circle at 60% 65%, #ffffff26 64%, #0000 65%) top
-      left/50% 50%,
-    radial-gradient(circle at 40% 65%, #ffffff26 64%, #0000 65%) top right/50%
-      50%,
-    conic-gradient(from -45deg at 50% 85.5%, #ffffff26 90deg, #0000 0)
-      bottom/100% 50%;
+  background: radial-gradient(circle at 60% 65%, #ffffff26 64%, #0000 65%) top left/50% 50%,
+    radial-gradient(circle at 40% 65%, #ffffff26 64%, #0000 65%) top right/50% 50%,
+    conic-gradient(from -45deg at 50% 85.5%, #ffffff26 90deg, #0000 0) bottom/100% 50%;
   background-repeat: no-repeat;
   left: 50%;
   top: 50%;
@@ -183,7 +204,7 @@ body {
 .heart:hover,
 .heart:active,
 .heart:focus {
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1.05);
   background-color: transparent;
   color: var(--heart-text);
 }
@@ -200,8 +221,11 @@ body {
   color: var(--heart-text);
   font-size: 1.5rem;
   font-family: var(--letter-font);
+  position: relative;
+  z-index: 5;
 }
 
+/* ===== ENVELOPE ACTIVE STATE ===== */
 .envelope.active * {
   pointer-events: none;
 }
@@ -219,6 +243,7 @@ body {
   display: none;
 }
 
+/* ===== LETTER ===== */
 .letter {
   box-sizing: border-box;
   font-family: var(--letter-font);
@@ -238,10 +263,15 @@ body {
   overflow: auto;
   text-align: center;
   border: 0;
+  display: none;
 }
 
 .letter:active {
   cursor: grabbing;
+}
+
+.letter.show {
+  display: block;
 }
 
 .letter.center {
@@ -275,16 +305,19 @@ body {
   }
 }
 
+/* ===== CLOSE LETTER BUTTON ===== */
 .closeLetter {
   font-size: 0 !important;
   position: absolute;
-  top: 1rem;
+  top: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
   background: none;
   box-shadow: none;
   padding: 0;
   border: 0;
+  cursor: pointer;
+  z-index: 10;
 }
 
 .closeLetter::before {
@@ -311,6 +344,142 @@ body {
   content: "xXx";
 }
 
-@import url("https://frills.dev/css/abstracts/_variables.css");
-@import url("https://frills.dev/css/components/_logo.css");s
+/* ===== ANIMATIONS ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
 
+.envelope {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ===== RESPONSIVE FIXES ===== */
+@media (max-width: 400px) {
+  :root {
+    --envelope-x: 250px;
+    --envelope-y: 180px;
+    --letter-x: 200px;
+    --letter-y: calc(180px - 1rem - 10px);
+  }
+  
+  .heart {
+    width: 50px;
+  }
+  
+  .envelope::before {
+    font-size: 3rem;
+  }
+  
+  .heart-text {
+    font-size: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="cssletter">
+  <div class="envelope" id="envelope">
+    <!-- Envelope Folds -->
+    <div class="envelope-folds">
+      <div class="envelope-left"></div>
+      <div class="envelope-right"></div>
+      <div class="envelope-bottom"></div>
+    </div>
+    
+    <!-- Envelope Flap -->
+    <div class="envelope-flap" id="flap"></div>
+    
+    <!-- Heart Button -->
+    <button class="heart" id="heartBtn" aria-label="Open letter">
+      <span class="heart-text">Open</span>
+    </button>
+    
+    <!-- Letter -->
+    <div class="letter center" id="letter">
+      <button class="closeLetter" id="closeBtn" aria-label="Close letter"></button>
+      <p>
+        My Dearest,<br><br>
+        Every day with you feels like a dream I never want to wake from.<br><br>
+        Your smile lights up my world,<br>
+        Your laugh is my favorite melody,<br>
+        Your heart is my safe haven.<br><br>
+        I love you more than words can say.
+      </p>
+      <cite>— Forever Yours ❤️</cite>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const envelope = document.getElementById('envelope');
+  const heartBtn = document.getElementById('heartBtn');
+  const letter = document.getElementById('letter');
+  const closeBtn = document.getElementById('closeBtn');
+  let isOpen = false;
+
+  // Open letter
+  function openLetter() {
+    envelope.classList.add('active');
+    letter.style.display = 'block';
+    setTimeout(() => {
+      letter.classList.add('show');
+    }, 300);
+    isOpen = true;
+  }
+
+  // Close letter
+  function closeLetter() {
+    letter.classList.remove('show');
+    setTimeout(() => {
+      letter.style.display = 'none';
+      envelope.classList.remove('active');
+    }, 300);
+    isOpen = false;
+  }
+
+  // Toggle on heart click
+  heartBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (!isOpen) {
+      openLetter();
+    }
+  });
+
+  // Close on close button click
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (isOpen) {
+      closeLetter();
+    }
+  });
+
+  // Close on clicking envelope background (when open)
+  envelope.addEventListener('click', function(e) {
+    if (isOpen && !letter.contains(e.target) && e.target !== heartBtn) {
+      closeLetter();
+    }
+  });
+
+  // Prevent letter clicks from closing
+  letter.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isOpen) {
+      closeLetter();
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && !isOpen) {
+      e.preventDefault();
+      openLetter();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
