@@ -32,8 +32,6 @@ body {
   --envelope-y: 200px;
   --envelope-bg: Moccasin;
   --envelope-shadow: Peru;
-  --letter-x: 250px;
-  --letter-y: calc(250px - 1rem - 10px);
   --letter-bg: AntiqueWhite;
   --letter-shadow: BurlyWood;
   --letter-text: #180d07;
@@ -47,8 +45,6 @@ body {
   :root {
     --envelope-x: 600px;
     --envelope-y: 400px;
-    --letter-x: 500px;
-    --letter-y: calc(400px - 1rem - 10px);
   }
 }
 
@@ -208,8 +204,6 @@ body {
 .heart:active,
 .heart:focus {
   transform: translate(-50%, -50%) scale(1.05);
-  background-color: transparent;
-  color: var(--heart-text);
 }
 
 .heart:hover::before,
@@ -238,58 +232,56 @@ body {
   box-shadow: inset 0 0 30px -5px var(--envelope-shadow);
 }
 
-/* ===== LETTERS CONTAINER ===== */
-.letters {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* ===== INDIVIDUAL LETTERS ===== */
+/* ===== LETTERS ===== */
 .letter {
-  box-sizing: border-box;
-  font-family: var(--letter-font);
-  font-size: 0.9rem;
-  line-height: 1.4;
-  background-color: var(--letter-bg);
-  color: var(--letter-text);
-  width: var(--letter-x);
-  max-width: 90vw;
-  box-shadow: inset 0 0 20px -5px var(--letter-shadow), 0 5px 20px rgba(0,0,0,0.3);
-  padding: 2.5rem 1rem 1rem;
-  margin: 0;
-  cursor: grab;
-  position: fixed;
-  overflow: auto;
-  text-align: center;
-  border: 0;
-  pointer-events: all;
   display: none;
-  max-height: 80vh;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 8px;
-  z-index: 100;
+  width: min(450px, 85vw);
+  max-height: 70vh;
+  background: var(--letter-bg);
+  color: var(--letter-text);
+  font-family: var(--letter-font);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 2.5rem 1.8rem 1.8rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px -5px var(--letter-shadow);
+  z-index: 1000;
+  cursor: grab;
+  overflow-y: auto;
+  text-align: center;
+  transition: none;
+}
+
+@media (min-width: 650px) {
+  .letter {
+    font-size: 1.1rem;
+    width: 500px;
+    padding: 3rem 2rem 2rem;
+  }
 }
 
 .letter.show {
   display: block;
+  animation: letterPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes letterPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7) rotate(-3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
 }
 
 .letter:active {
   cursor: grabbing;
-}
-
-.letter.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 
 .letter p {
@@ -297,36 +289,49 @@ body {
 }
 
 .letter cite {
-  font-size: 1.1rem;
-  color: var(--letter-text);
-  margin-top: 0.5rem;
+  display: block;
+  margin-top: 1rem;
   font-style: italic;
+  font-size: 1.1rem;
 }
 
 .letter cite::before {
   content: "— ";
 }
 
-/* ===== CLOSE LETTER BUTTON ===== */
+/* ===== CLOSE BUTTON ===== */
 .closeLetter {
   position: absolute;
-  top: 0.5rem;
-  right: 0.8rem;
+  top: 0.8rem;
+  right: 1rem;
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: var(--letter-button-text);
-  padding: 5px;
   font-family: var(--letter-font);
   font-weight: bold;
   transition: transform 0.3s ease;
-  z-index: 10;
+  z-index: 1001;
+  padding: 5px 10px;
+  line-height: 1;
 }
 
 .closeLetter:hover {
-  transform: scale(1.2);
-  color: #ff0000;
+  transform: scale(1.3) rotate(90deg);
+  color: #cc0000;
+}
+
+/* ===== LETTER COUNTER ===== */
+.letter-counter {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.3);
+  font-family: var(--letter-font);
+  letter-spacing: 1px;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -339,19 +344,19 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-@keyframes letterAppear {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+/* ===== SCROLLBAR ===== */
+.letter::-webkit-scrollbar {
+  width: 6px;
 }
 
-.letter.show {
-  animation: letterAppear 0.4s ease forwards;
+.letter::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+.letter::-webkit-scrollbar-thumb {
+  background: var(--envelope-shadow);
+  border-radius: 10px;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -359,8 +364,6 @@ body {
   :root {
     --envelope-x: 250px;
     --envelope-y: 180px;
-    --letter-x: 200px;
-    --letter-y: calc(180px - 1rem - 10px);
   }
   
   .heart {
@@ -376,24 +379,9 @@ body {
   }
   
   .letter {
-    font-size: 0.8rem;
-    padding: 2rem 0.8rem 0.8rem;
+    font-size: 0.85rem;
+    padding: 2rem 1rem 1.5rem;
   }
-}
-
-/* ===== SCROLLBAR STYLING ===== */
-.letter::-webkit-scrollbar {
-  width: 6px;
-}
-
-.letter::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.05);
-  border-radius: 10px;
-}
-
-.letter::-webkit-scrollbar-thumb {
-  background: var(--envelope-shadow);
-  border-radius: 10px;
 }
 </style>
 </head>
@@ -411,85 +399,100 @@ body {
       <div class="envelope-bottom"></div>
     </div>
   </div>
-  
-  <div class="letters" id="lettersContainer">
-    <!-- Letter 1 -->
-    <blockquote class="letter" id="letter1" tabindex="0">
-      <button class="closeLetter" title="Close Vidhi's letter">✕</button>
-      <p>I remember us becoming friends back in 11th, initially, we weren't as close. I love talking trash about other people with you, I feel like we can say anything to each other without being cancelled. I wish you the very best in everything, whether our path diverge or converge.</p>
-      <cite>Vidhi</cite>
-    </blockquote>
-
-    <!-- Letter 2 -->
-    <blockquote class="letter" id="letter2" tabindex="0">
-      <button class="closeLetter" title="Close Sai's letter">✕</button>
-      <p>I honestly don't know how quickly we became friends, it all happened in a flash. It's been two years since then and it still feels weird. One of my most unexpected friendships for sure. Thank you for solving my 2 rupee ke doubts at odd hours.</p>
-      <cite>Sai</cite>
-    </blockquote>
-
-    <!-- Letter 3 -->
-    <blockquote class="letter" id="letter3" tabindex="0">
-      <button class="closeLetter" title="Close Saksham's letter">✕</button>
-      <p>I just forced you on a random day to be my friend and today I'd say you're a solid friend. Sure, we've had our fall outs and we bitch about each other behind our backs but I know we'd have each other's backs in need. I'll miss you whenever I see a doggie that looks just like you.</p>
-      <cite>Saksham</cite>
-    </blockquote>
-
-    <!-- Letter 4 -->
-    <blockquote class="letter" id="letter4" tabindex="0">
-      <button class="closeLetter" title="Close Sylvia's letter">✕</button>
-      <p>Keep it a secret from the rest, but I'd probably miss you the most. I'll miss our hypotheticals, our laughter in between lectures, crashing out over physics. I love you.</p>
-      <cite>Sylvia</cite>
-    </blockquote>
-
-    <!-- Letter 5 -->
-    <blockquote class="letter" id="letter5" tabindex="0">
-      <button class="closeLetter" title="Close Kunal's letter">✕</button>
-      <p>I had a lot of fun with you in class, I'll miss your bak-bak the most. Take care in KT.</p>
-      <cite>Kunal</cite>
-    </blockquote>
-  </div>
 </section>
+
+<!-- Letters (outside envelope for better layering) -->
+<div id="lettersContainer">
+  <!-- Letter 1 -->
+  <div class="letter" id="letter1" data-author="Vidhi">
+    <button class="closeLetter" title="Close letter">✕</button>
+    <p>I remember us becoming friends back in 11th, initially, we weren't as close. I love talking trash about other people with you, I feel like we can say anything to each other without being cancelled. I wish you the very best in everything, whether our paths diverge or converge.</p>
+    <cite>Vidhi</cite>
+  </div>
+
+  <!-- Letter 2 -->
+  <div class="letter" id="letter2" data-author="Sai">
+    <button class="closeLetter" title="Close letter">✕</button>
+    <p>I honestly don't know how quickly we became friends, it all happened in a flash. It's been two years since then and it still feels weird. One of my most unexpected friendships for sure. Thank you for solving my 2 rupee ke doubts at odd hours.</p>
+    <cite>Sai</cite>
+  </div>
+
+  <!-- Letter 3 -->
+  <div class="letter" id="letter3" data-author="Saksham">
+    <button class="closeLetter" title="Close letter">✕</button>
+    <p>I just forced you on a random day to be my friend and today I'd say you're a solid friend. Sure, we've had our fall outs and we bitch about each other behind our backs but I know we'd have each other's backs in need. I'll miss you whenever I see a doggie that looks just like you.</p>
+    <cite>Saksham</cite>
+  </div>
+
+  <!-- Letter 4 -->
+  <div class="letter" id="letter4" data-author="Sylvia">
+    <button class="closeLetter" title="Close letter">✕</button>
+    <p>Keep it a secret from the rest, but I'd probably miss you the most. I'll miss our hypotheticals, our laughter in between lectures, crashing out over physics. I love you.</p>
+    <cite>Sylvia</cite>
+  </div>
+
+  <!-- Letter 5 -->
+  <div class="letter" id="letter5" data-author="Kunal">
+    <button class="closeLetter" title="Close letter">✕</button>
+    <p>I had a lot of fun with you in class, I'll miss your bak-bak the most. Take care in KT.</p>
+    <cite>Kunal</cite>
+  </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const envelope = document.getElementById('envelope');
   const openBtn = document.getElementById('openEnvelope');
-  const letters = document.querySelectorAll('.letter');
-  const closeButtons = document.querySelectorAll('.closeLetter');
+  const allLetters = document.querySelectorAll('.letter');
+  let currentLetterIndex = 0;
+  let isEnvelopeOpen = false;
   let currentLetter = null;
-  let isOpen = false;
+  let dragData = null;
+
+  // Sort letters into array
+  const letters = Array.from(allLetters);
 
   // Open envelope and show first letter
   openBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    if (!isOpen) {
+    if (!isEnvelopeOpen) {
       envelope.classList.add('active');
-      isOpen = true;
+      isEnvelopeOpen = true;
       
       // Show first letter after envelope opens
       setTimeout(() => {
-        if (letters.length > 0) {
-          showLetter(letters[0]);
-        }
+        showLetter(0);
       }, 700);
     }
   });
 
-  // Show a specific letter
-  function showLetter(letter) {
+  // Show a specific letter by index
+  function showLetter(index) {
     // Hide all letters
     letters.forEach(l => l.classList.remove('show'));
+    letters.forEach(l => l.style.display = 'none');
+    
     // Show the selected letter
-    letter.classList.add('show');
-    currentLetter = letter;
-    // Add a small delay for animation
-    setTimeout(() => {
+    const letter = letters[index];
+    if (letter) {
       letter.style.display = 'block';
-    }, 50);
+      // Force reflow for animation
+      void letter.offsetWidth;
+      letter.classList.add('show');
+      currentLetter = letter;
+      currentLetterIndex = index;
+      
+      // Reset position to center
+      letter.style.position = 'fixed';
+      letter.style.top = '50%';
+      letter.style.left = '50%';
+      letter.style.transform = 'translate(-50%, -50%)';
+      letter.style.zIndex = 1000;
+    }
   }
 
   // Close current letter
-  function closeLetter() {
+  function closeCurrentLetter() {
     if (currentLetter) {
       currentLetter.classList.remove('show');
       setTimeout(() => {
@@ -499,8 +502,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Show next letter or close envelope
+  function showNextLetter() {
+    const nextIndex = (currentLetterIndex + 1) % letters.length;
+    
+    // If we've shown all letters (returned to first), close everything
+    if (nextIndex === 0 && currentLetterIndex === letters.length - 1) {
+      // Close envelope after all letters shown
+      setTimeout(() => {
+        envelope.classList.remove('active');
+        isEnvelopeOpen = false;
+        closeCurrentLetter();
+      }, 500);
+    } else {
+      showLetter(nextIndex);
+    }
+  }
+
   // Close button functionality
-  closeButtons.forEach(button => {
+  document.querySelectorAll('.closeLetter').forEach(button => {
     button.addEventListener('click', function(e) {
       e.stopPropagation();
       const letter = this.closest('.letter');
@@ -518,51 +538,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Click on envelope to show next letter
   envelope.addEventListener('click', function(e) {
-    if (isOpen && e.target === this || e.target.closest('.envelope-folds') || e.target.closest('.envelope-flap')) {
-      // Find current letter index
-      let currentIndex = -1;
-      letters.forEach((l, i) => {
-        if (l.classList.contains('show')) {
-          currentIndex = i;
-        }
-      });
-      
-      // Show next letter
-      let nextIndex = (currentIndex + 1) % letters.length;
-      // If we've shown all, close envelope
-      if (nextIndex === 0 && currentIndex !== -1) {
-        // Close envelope after all letters shown
-        setTimeout(() => {
-          envelope.classList.remove('active');
-          isOpen = false;
-          closeLetter();
-        }, 500);
-      } else {
-        showLetter(letters[nextIndex]);
+    if (isEnvelopeOpen && currentLetter) {
+      // Only trigger if clicking on envelope background, not the heart
+      if (e.target === this || e.target.closest('.envelope-folds') || e.target.closest('.envelope-flap')) {
+        showNextLetter();
       }
     }
   });
 
-  // Dragging functionality for letters
-  let dragData = null;
-
+  // === DRAGGING FUNCTIONALITY ===
   letters.forEach(letter => {
     letter.addEventListener('mousedown', function(e) {
-      if (e.target.tagName !== 'BUTTON') {
-        const rect = this.getBoundingClientRect();
-        dragData = {
-          element: this,
-          offsetX: e.clientX - rect.left,
-          offsetY: e.clientY - rect.top,
-          zIndex: 1000
-        };
-        this.style.cursor = 'grabbing';
-        this.style.zIndex = dragData.zIndex;
-        e.preventDefault();
-      }
+      // Don't drag if clicking the close button
+      if (e.target.closest('.closeLetter')) return;
+      
+      const rect = this.getBoundingClientRect();
+      dragData = {
+        element: this,
+        offsetX: e.clientX - rect.left,
+        offsetY: e.clientY - rect.top,
+        startX: rect.left,
+        startY: rect.top
+      };
+      
+      this.style.cursor = 'grabbing';
+      this.style.zIndex = 1001;
+      this.style.transition = 'none';
+      e.preventDefault();
     });
+
+    // Touch support for mobile
+    letter.addEventListener('touchstart', function(e) {
+      if (e.target.closest('.closeLetter')) return;
+      
+      const touch = e.touches[0];
+      const rect = this.getBoundingClientRect();
+      dragData = {
+        element: this,
+        offsetX: touch.clientX - rect.left,
+        offsetY: touch.clientY - rect.top,
+        startX: rect.left,
+        startY: rect.top
+      };
+      
+      this.style.cursor = 'grabbing';
+      this.style.zIndex = 1001;
+      this.style.transition = 'none';
+    }, { passive: true });
   });
 
+  // Mouse move
   document.addEventListener('mousemove', function(e) {
     if (dragData) {
       const el = dragData.element;
@@ -570,9 +595,24 @@ document.addEventListener('DOMContentLoaded', function() {
       el.style.left = (e.clientX - dragData.offsetX) + 'px';
       el.style.top = (e.clientY - dragData.offsetY) + 'px';
       el.style.transform = 'none';
+      el.style.margin = '0';
     }
   });
 
+  // Touch move
+  document.addEventListener('touchmove', function(e) {
+    if (dragData) {
+      const touch = e.touches[0];
+      const el = dragData.element;
+      el.style.position = 'fixed';
+      el.style.left = (touch.clientX - dragData.offsetX) + 'px';
+      el.style.top = (touch.clientY - dragData.offsetY) + 'px';
+      el.style.transform = 'none';
+      el.style.margin = '0';
+    }
+  }, { passive: true });
+
+  // Mouse up / Touch end
   document.addEventListener('mouseup', function() {
     if (dragData) {
       dragData.element.style.cursor = 'grab';
@@ -580,22 +620,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Keyboard accessibility
+  document.addEventListener('touchend', function() {
+    if (dragData) {
+      dragData.element.style.cursor = 'grab';
+      dragData = null;
+    }
+  });
+
+  // === KEYBOARD ACCESSIBILITY ===
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && currentLetter) {
-      closeLetter();
+      closeCurrentLetter();
     }
-    if (e.key === 'Enter' && !isOpen) {
+    if ((e.key === 'Enter' || e.key === ' ') && !isEnvelopeOpen) {
+      e.preventDefault();
       openBtn.click();
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      if (isEnvelopeOpen && currentLetter) {
+        e.preventDefault();
+        showNextLetter();
+      }
     }
   });
 
   // Click outside to close letter
   document.addEventListener('click', function(e) {
-    if (currentLetter && !currentLetter.contains(e.target) && !envelope.contains(e.target)) {
-      closeLetter();
+    if (currentLetter && 
+        !currentLetter.contains(e.target) && 
+        !envelope.contains(e.target) &&
+        !e.target.closest('.letter')) {
+      closeCurrentLetter();
     }
   });
+
+  // Initial state - hide all letters
+  letters.forEach(l => {
+    l.style.display = 'none';
+  });
+
+  
 });
 </script>
 
